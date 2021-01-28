@@ -25,6 +25,7 @@ dependencies:
 - random
 - mtl
 - monad-loops
+- gloss
 
 library:
   source-dirs: src

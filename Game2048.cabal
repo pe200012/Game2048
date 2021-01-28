@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 193ab6e4b1228295ac2f8a94d5588eefeda226c2707b31212b1b170991d49355
+-- hash: 473ffa424a06164df15b256fe0ebb9188e969e8cd0af558e235d0a3bbc411de3
 
 name:           Game2048
 version:        0.1.0.0
@@ -35,6 +35,7 @@ library
   build-depends:
       array
     , base >=4.7 && <5
+    , gloss
     , monad-loops
     , mtl
     , random
@@ -51,6 +52,7 @@ executable Game2048-exe
       Game2048
     , array
     , base >=4.7 && <5
+    , gloss
     , monad-loops
     , mtl
     , random
@@ -68,6 +70,7 @@ test-suite Game2048-test
       Game2048
     , array
     , base >=4.7 && <5
+    , gloss
     , monad-loops
     , mtl
     , random
