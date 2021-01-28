@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "Game2048:lib"
+
+    - path: "./app/Main.hs"
+      component: "Game2048:exe:Game2048-exe"
+
+    - path: "./app/Paths_Game2048.hs"
+      component: "Game2048:exe:Game2048-exe"
+
+    - path: "./test"
+      component: "Game2048:test:Game2048-test"
