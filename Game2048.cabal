@@ -4,16 +4,16 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 93974c1230935f24a218ccb0ab11aaec8071d148fb5ed0ec0a59267b93705be6
+-- hash: 193ab6e4b1228295ac2f8a94d5588eefeda226c2707b31212b1b170991d49355
 
 name:           Game2048
 version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/Game2048#readme>
-homepage:       https://github.com/githubuser/Game2048#readme
-bug-reports:    https://github.com/githubuser/Game2048/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2021 Author name here
+homepage:       https://github.com/pe200012/Game2048#readme
+bug-reports:    https://github.com/pe200012/Game2048/issues
+author:         pe200012
+maintainer:     1326263755@qq.com
+copyright:      2021 pe200012
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/Game2048
+  location: https://github.com/pe200012/Game2048
 
 library
   exposed-modules:
