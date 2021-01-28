@@ -38,6 +38,9 @@ display (Grid arr) = for_ (indices arr) $ \i -> do
     putChar $ if snd i == cB then '\n' else ' '
     where cB = snd $ snd (bounds arr)
 
+score :: Grid -> Int
+score = sum . unGrid
+
 whenM :: Monad m => m Bool -> m () -> m ()
 whenM mb d = mb >>= flip when d
 
@@ -81,14 +84,16 @@ newGame :: IO ()
 newGame = do
     (g, gen) <- generateNum . (emptyGrid, ) <$> getStdGen
     display g
-    gameLoop gen g
+    final <- gameLoop gen g
+    print "Game Over"
+    putStrLn ("Score: " ++ show (score final))
   where
     gameLoop gen grid = if 0 `notElem` unGrid grid
-        then return ()
+        then return grid
         else do
             c <- getChar
             if c == 'q'
-                then return ()
+                then return grid
                 else case keyDispatch c of
                     Nothing -> gameLoop gen grid
                     Just d ->
