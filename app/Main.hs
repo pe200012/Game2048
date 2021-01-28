@@ -100,4 +100,4 @@ newGame = do
     keyDispatch _   = Nothing
 
 main :: IO ()
-main = pure ()
+main = newGame
