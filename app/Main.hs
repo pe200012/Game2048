@@ -140,21 +140,23 @@ data GraphicGrid = GraphicGrid
     }
 
 graphicGrid :: Int -> Int -> StdGen -> GraphicGrid
-graphicGrid h w = GraphicGrid h w bs where bs = [ (fromIntegral r, fromIntegral c) | r <- [0, h `div` 4 .. h - 1], c <- [0, w `div` 4 .. w - 1] ]
+graphicGrid h w = GraphicGrid h w bs
+    where bs = [ (fromIntegral r, fromIntegral c) | r <- [0, h `div` 4 .. h - 1], c <- [0, w `div` 4 .. w - 1] ]
 
 gridPicture :: GraphicGrid -> Picture
 gridPicture gg = pictures (blockFrame <$> blocks gg)
   where
     blockFrame (r, c) = line [(r, c), (r + perHeight, c), (r + perHeight, c + perWidth), (r, c + perWidth), (r, c)]
-    perHeight = fromIntegral (gHeight gg `div` 4)
-    perWidth  = fromIntegral (gWidth gg `div` 4)
+    perHeight = fromIntegral (gHeight gg) / 4
+    perWidth  = fromIntegral (gWidth gg) / 4
 
 renderGrid :: GraphicGrid -> Grid -> Picture
 renderGrid gg g = pictures (debuggingAnchor : gridPicture gg : numbers)
   where
-    numbers   = app . bimap (uncurry translate . bimap ((perHeight *) . fromIntegral) ((perWidth *) . fromIntegral)) (text . show) <$> assocs (unGrid g)
+    numbers   = app . bimap (uncurry translate . translatePoint) (text . show) <$> assocs (unGrid g)
     perHeight = fromIntegral (gHeight gg `div` 4)
     perWidth  = fromIntegral (gWidth gg `div` 4)
+    translatePoint (r, c) = (200 * fromIntegral c, fromIntegral (450 - 150 * r))
 
 debuggingAnchor :: Picture
 debuggingAnchor = pictures [line [(0, 0), (-100, 0)], line [(0, 0), (0, -100)]]
