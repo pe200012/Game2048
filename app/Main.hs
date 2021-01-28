@@ -135,13 +135,12 @@ newGame = do
 data GraphicGrid = GraphicGrid
     { gHeight :: Int
     , gWidth  :: Int
-    , blocks  :: [(Float, Float)] -- topleft points of blocks
+    , blocks  :: [(Float, Float)] -- bottomleft points of blocks
     , ggen    :: StdGen
     }
 
 graphicGrid :: Int -> Int -> StdGen -> GraphicGrid
-graphicGrid h w = GraphicGrid h w bs
-    where bs = [ (fromIntegral r, fromIntegral c) | r <- [0, h `div` 4 .. h - 1], c <- [0, w `div` 4 .. w - 1] ]
+graphicGrid h w = GraphicGrid h w bs where bs = [ (fromIntegral r, fromIntegral c) | r <- [0, h `div` 4 .. h - 1], c <- [0, w `div` 4 .. w - 1] ]
 
 gridPicture :: GraphicGrid -> Picture
 gridPicture gg = pictures (blockFrame <$> blocks gg)
@@ -168,19 +167,30 @@ instance Exception GameExit
 
 main :: IO ()
 main = do
-    gen <- getStdGen
-    catch (play (InWindow "Nice Window" (800, 600) (100, 100)) white 30 (graphicGrid 800 600 gen, emptyGrid) (translate (-400) (-300) . uncurry renderGrid) handleEvent (const id))
+    (g, gen) <- generateNum . (emptyGrid, ) <$> getStdGen
+    catch
+            (play (InWindow "Nice Window" (800, 600) (100, 100))
+                  white
+                  30
+                  (graphicGrid 800 600 gen, g)
+                  (translate (-400) (-300) . uncurry renderGrid)
+                  handleEvent
+                  (const id)
+            )
         $ \case
               GameExit -> return ()
-              e        -> throw e
   where
     handleEvent e world = case e of
         EventKey (Char c) Down _ _ -> dispatch c world
         _                          -> world
     dispatch key (gg, g) = case key of
         'q' -> throw GameExit
-        c | c `elem` "wsad" -> let (g', gen) = generateNum (g `move` dispatchDirection c, ggen gg) in (gg { ggen = gen }, g')
-          | otherwise       -> (gg, g)
+        c
+            | c `elem` "wsad"
+            -> let (g', gen) = generateNum (g `move` dispatchDirection c, ggen gg)
+               in  if g == g `move` dispatchDirection c then (gg, g) else (gg { ggen = gen }, g')
+            | otherwise
+            -> (gg, g)
     dispatchDirection 'w' = U
     dispatchDirection 's' = D
     dispatchDirection 'a' = L
