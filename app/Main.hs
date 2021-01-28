@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
@@ -11,7 +12,8 @@ import           Data.Array                     ( (//)
                                                 )
 import           Data.Foldable                  ( for_ )
 import           Control.Monad                  ( when )
-import           System.Random                  ( RandomGen
+import           System.Random                  ( getStdGen
+                                                , RandomGen
                                                 , randomR
                                                 )
 import           Control.Arrow                  ( Arrow(first) )
@@ -70,6 +72,32 @@ generateNum origin@(Grid arr, g) = if null emptySlots
     emptySlots = filter ((== 0) . (arr !)) (indices arr)
     (p  , g' ) = first (emptySlots !!) $ randomR (0, length emptySlots - 1) g
     (num, g'') = first (\(n :: Double) -> if n > 0.9 then 4 else 2) $ randomR (0, 1.0) g'
+
+newGame :: IO ()
+newGame = do
+    (g, gen) <- generateNum . (emptyGrid, ) <$> getStdGen
+    display g
+    gameLoop gen g
+  where
+    gameLoop gen grid = if 0 `notElem` unGrid grid
+        then return ()
+        else do
+            c <- getChar
+            if c == 'q'
+                then return ()
+                else case keyDispatch c of
+                    Nothing -> gameLoop gen grid
+                    Just d ->
+                        let grid'          = grid `move` d
+                            (grid'', gen') = generateNum (grid', gen)
+                        in  if grid' == grid
+                                then gameLoop gen grid
+                                else display grid'' >> gameLoop gen' grid''
+    keyDispatch 'w' = return U
+    keyDispatch 's' = return D
+    keyDispatch 'a' = return L
+    keyDispatch 'd' = return R
+    keyDispatch _   = Nothing
 
 main :: IO ()
 main = pure ()
