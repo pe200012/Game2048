@@ -5,6 +5,8 @@
 
 Writing this just for fun ()
 
+## Screenshot
+![Screen](https://raw.githubusercontent.com/pe200012/Game2048/master/res/Screen.png)
 
 ## Prerequisite
 
